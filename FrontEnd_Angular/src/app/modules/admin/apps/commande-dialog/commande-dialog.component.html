@@ -1,0 +1,65 @@
+<div mat-dialog-title >
+    <h1>{{isAdding ? 'Add Command': 'Edit Command'}}</h1>
+</div>
+<form [formGroup]="AddForm" (ngSubmit)="onFormSubmit()">
+    <div mat-dialog-content class="content" style="width: 560px;">
+        <div class="row">
+            <div class="col-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>Date de commande</mat-label>
+                    <input matInput type="date" placeholder="Date" formControlName="dateCmd">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Delai de commande</mat-label>
+                    <input matInput type="number" placeholder="Delai" formControlName="delaiCmd">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Mode de paiement</mat-label>
+                    <input matInput type="text" placeholder="mode" formControlName="modePaiment">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+
+                    <mat-label>Statut</mat-label>
+                    <input matInput type="text" placeholder="statut" formControlName="statut">
+                </mat-form-field>
+
+            </div>
+            <div class="col-3">
+                <mat-form-field appearance="outline" style="margin-left: 100px;">
+                    <mat-label>Adresse de livraison</mat-label>
+                    <input matInput placeholder="Adresse"
+                     type="text" formControlName="adresseLivraison">
+                </mat-form-field>
+                <mat-form-field appearance="outline" style="margin-left: 100px;">
+                    <mat-label>Montant Total</mat-label>
+                    <input matInput type="number" placeholder="Montant" formControlName="montantToltal">
+                </mat-form-field>
+             
+
+            </div>
+
+
+
+        </div>
+
+
+
+
+
+        <!-- <div class="row">
+            <mat-radio-group aria-label="Select an option" formControlName="gender">
+                <mat-label><b>Gender</b></mat-label>
+                <mat-radio-button value="male">Male</mat-radio-button>
+                <mat-radio-button value="female">Female</mat-radio-button>
+                <mat-radio-button value="others">Others</mat-radio-button>
+            </mat-radio-group>
+        </div> -->
+
+
+
+    </div>
+    <div mat-dialog-actions class="action" style="margin-left: 400px;">
+        <button mat-raised-button type="button" [mat-dialog-close]="false">Cancel</button>
+        <button mat-raised-button color="primary"  type="submit">Save</button>
+    </div>
+</form>

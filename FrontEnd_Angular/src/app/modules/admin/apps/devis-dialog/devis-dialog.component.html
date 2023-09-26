@@ -1,0 +1,44 @@
+<div mat-dialog-title >
+    <h1>{{isAdding ? 'Add Devis': 'Edit Devis'}}</h1>
+</div>
+<form [formGroup]="AddForm" (ngSubmit)="onFormSubmit()">
+    <div mat-dialog-content class="content" style="width: 560px;">
+        <div class="row">
+            <div class="col-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>Date de creation devis</mat-label>
+                    <input matInput type="date" placeholder="dateCreeDevis" formControlName="dateCreeDevis">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Delai de validation devis</mat-label>
+                    <input matInput type="date" placeholder="dateValidDevis" formControlName="dateValidDevis">
+                </mat-form-field>
+
+            </div>
+            <div class="col-3">
+                <mat-form-field appearance="outline" style="margin-left: 100px;">
+                    <mat-label>Montant total</mat-label>
+                    <input matInput placeholder="montanTotal"
+                     type="text" formControlName="montanTotal">
+                </mat-form-field>
+                <mat-form-field appearance="outline" style="margin-left: 100px;">
+                    <mat-label>Statut Devis</mat-label>
+                    <input matInput type="text" placeholder="statutDevis" formControlName="statutDevis">
+                </mat-form-field>
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+
+    </div>
+    <div mat-dialog-actions class="action" style="margin-left: 400px;">
+        <button mat-raised-button type="button" [mat-dialog-close]="false">Cancel</button>
+        <button mat-raised-button color="primary"  type="submit">Save</button>
+    </div>
+</form>

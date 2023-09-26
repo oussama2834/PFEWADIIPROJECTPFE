@@ -1,0 +1,94 @@
+<div mat-dialog-title >
+    <h1>{{isAdding ? 'Add Article': 'Edit Article'}}</h1>
+</div>
+<form [formGroup]="AddForm" (ngSubmit)="onFormSubmit()">
+    <div mat-dialog-content class="content" style="width: 560px;">
+        <div class="row">
+            <div class="col-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>Name</mat-label>
+                    <input matInput type="text" placeholder="Name" formControlName="name">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Description</mat-label>
+                    <input matInput placeholder="Description" formControlName="description">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Price</mat-label>
+                    <input matInput type="email" placeholder="Price" formControlName="price">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <!-- <mat-label>Date of birth</mat-label>
+                    <input matInput [matDatepicker]="picker" formControlName="dob">
+                    <mat-hint>MM/DD/YYYY</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker> -->
+                    <mat-label>Quantity</mat-label>
+                    <input matInput type="number" placeholder="Quantity" formControlName="quantity">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Description</mat-label>
+                    <input matInput placeholder="Description" formControlName="description">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Stock</mat-label>
+                    <input matInput placeholder="Stock" formControlName="stock">
+                </mat-form-field>
+            </div>
+            <div class="col-3">
+                <mat-form-field appearance="outline" style="margin-left: 100px;">
+                    <mat-label>TaxPercent</mat-label>
+                    <input matInput placeholder="TaxPercent"
+                     type="text" formControlName="taxPercent">
+                </mat-form-field>
+                <mat-form-field appearance="outline" style="margin-left: 100px;">
+                    <mat-label>Brand</mat-label>
+                    <input matInput placeholder="Brand" type="text" formControlName="brand">
+                    <!-- <mat-hint>In rupees</mat-hint> -->
+                </mat-form-field>
+                 <mat-form-field appearance="outline" style="margin-left: 100px;">
+                    <mat-label>Cost</mat-label>
+                    <input matInput placeholder="Cost" type="text" formControlName="cost">
+                    <!-- <mat-hint>In rupees</mat-hint> -->
+                </mat-form-field>
+                <mat-form-field appearance="outline" style="margin-left: 100px;">
+                    <mat-label>Reserved</mat-label>
+                    <input matInput placeholder="Reserved" type="text" formControlName="reserved">
+                    <!-- <mat-hint>In rupees</mat-hint> -->
+                </mat-form-field>
+                <mat-form-field appearance="outline" style="margin-left: 100px;">
+                    <mat-label>vendor</mat-label>
+                    <input matInput placeholder="Vendor" type="text" formControlName="vendor">
+                    <!-- <mat-hint>In rupees</mat-hint> -->
+                </mat-form-field>
+            </div>
+                <!-- <mat-label>Education</mat-label>
+                <mat-select formControlName="education">
+                    <mat-option *ngFor="let val of education" [value]="val">{{val}}
+                    </mat-option>
+                </mat-select> -->
+
+
+        </div>
+
+
+
+
+
+        <!-- <div class="row">
+            <mat-radio-group aria-label="Select an option" formControlName="gender">
+                <mat-label><b>Gender</b></mat-label>
+                <mat-radio-button value="male">Male</mat-radio-button>
+                <mat-radio-button value="female">Female</mat-radio-button>
+                <mat-radio-button value="others">Others</mat-radio-button>
+            </mat-radio-group>
+        </div> -->
+
+
+
+    </div>
+    <div mat-dialog-actions class="action" style="margin-left: 400px;">
+        <button mat-raised-button type="button" [mat-dialog-close]="false">Cancel</button>
+        <button mat-raised-button color="primary"  type="submit">Save</button>
+    </div>
+</form>
