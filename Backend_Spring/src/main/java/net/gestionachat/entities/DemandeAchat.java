@@ -28,11 +28,11 @@ public class DemandeAchat {
     private String etat;
     private String motifRejet;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_user_demandeur")
     private User userDemandeur;
-
-    @Column(name = "id_user_approbateur")
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "id_user_approbateur")
     private User userApprouvant;
 
 

@@ -16,7 +16,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { MatInputModule } from '@angular/material/input';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
-import { NgApexchartsModule } from 'ng-apexcharts';
+import { ApexChart, NgApexchartsModule } from 'ng-apexcharts';
 import { DemandeAchatService } from './demande-achat.service';
 import { InventoryBrand, InventoryCategory, InventoryPagination, InventoryProduct, InventoryTag, InventoryVendor } from '../ecommerce/inventory/inventory.types';
 import { MatCheckboxChange } from '@angular/material/checkbox';
@@ -32,7 +32,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { AddDemandeAchatComponent } from '../add-demande-achat/add-demande-achat.component';
 import { TableModule } from 'primeng/table';
 import { AuthService } from 'app/core/auth/auth.service';
-import { User } from 'app/core/user/user.types';
+import { Role, User } from 'app/core/user/user.types';
+import { ConfirmationDialogComponent } from '../../ui/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
     selector: 'app-demandeachat',
@@ -53,14 +54,14 @@ import { User } from 'app/core/user/user.types';
         FuseAlertComponent,
         MatFormFieldModule,
         MatInputModule,
-        NgIf,MatPaginatorModule,NgClass,TableModule
+        NgIf,MatPaginatorModule,NgClass,TableModule,MatMenuModule
     ],
 })
 export class DemandeAchatComponent implements OnInit {
 
     @ViewChild(MatPaginator) private _paginator: MatPaginator;
     @ViewChild(MatSort) private _sort: MatSort;
-
+    roles: Role[];
     products$: Observable<InventoryProduct[]>;
     IsOpen = false;
     brands: InventoryBrand[];
@@ -80,7 +81,14 @@ export class DemandeAchatComponent implements OnInit {
     achats :DemandeAchat[] = [];
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     currentUser !: User;
-    currentEmail :string
+    currentEmail: string;
+    IsUser: boolean;
+    IsResponsable_Achat: boolean;
+    configFormAccept: UntypedFormGroup;
+    configFormRefuse: UntypedFormGroup;
+    IsRefuseDialogOpen: Boolean;
+    IsAcceptDialogOpen: Boolean;
+
     /**
      * Constructor
      */
@@ -115,11 +123,109 @@ export class DemandeAchatComponent implements OnInit {
        console.log(error)
     })
     }
+    RefuseConfirmationDialog(achat:DemandeAchat) {
+
+        const dialogRef = this._fuseConfirmationService.open(this.configFormRefuse.value);
+
+        dialogRef.afterClosed().subscribe((result) =>
+        {
+            console.log(result);
+            if (result == 'confirmed') {
+
+                this.RefuseDemand(achat);
+            }
+        });
+    }
+    AcceptConfirmationDialog(achat:DemandeAchat) {
+
+        const dialogRef = this._fuseConfirmationService.open(this.configFormAccept.value);
+
+        dialogRef.afterClosed().subscribe((result) =>
+        {
+            console.log(result);
+            if (result == 'confirmed') {
+                this.AcceptDemand(achat);
+
+            }
+        });
+    }
+    AcceptDemand(demand: DemandeAchat) {
+        console.log(demand);
+        demand.userApprouvant = this.currentUser;
+        this.demandeAchatService.validerDemande(demand).subscribe(res => {
+            console.log(res)
+            window.location.reload();
+        },
+            (error) => console.log(error))
+    }
+    RefuseDemand(demand: DemandeAchat) {
+        demand.userApprouvant = this.currentUser;
+        this.demandeAchatService.RefuserDemande(demand).subscribe(res => {
+            console.log(res);
+            window.location.reload();
+        },
+            (error) => console.log(error))
+    }
     ngOnInit(): void
     {
+
+            this.configFormAccept = this._formBuilder.group({
+                title      : 'Accept Demand',
+                message    : 'Are you sure you want to accept this demand? <span class="font-medium">This action cannot be undone!</span>',
+                icon       : this._formBuilder.group({
+                    show : true,
+                    name : 'heroicons_outline:check',
+                    color: 'primary',
+                }),
+                actions    : this._formBuilder.group({
+                    confirm: this._formBuilder.group({
+                        show : true,
+                        label: 'Accept',
+                        color: 'primary',
+                    }),
+                    cancel : this._formBuilder.group({
+                        show : true,
+                        label: 'Cancel',
+                    }),
+                }),
+                dismissible: true,
+            });
+
+            this.configFormRefuse = this._formBuilder.group({
+                title      : 'Refuse demand',
+                message    : 'Are you sure you want to refuse this demand permanently? <span class="font-medium">This action cannot be undone!</span>',
+                icon       : this._formBuilder.group({
+                    show : true,
+                    name : 'heroicons_outline:exclamation-triangle',
+                    color: 'warn',
+                }),
+                actions    : this._formBuilder.group({
+                    confirm: this._formBuilder.group({
+                        show : true,
+                        label: 'Refuse',
+                        color: 'warn',
+                    }),
+                    cancel : this._formBuilder.group({
+                        show : true,
+                        label: 'Cancel',
+                    }),
+                }),
+                dismissible: true,
+            });
+
+
         this.getAllAchats();
         this.authservice.FindUserByEmail(this.currentEmail).subscribe(res => {
             this.currentUser = res
+            this.roles = this.currentUser.roles;
+            for (let role of this.roles) {
+                if (role.name == 'User') {
+                    this.IsUser = true;
+                    this.cdRef.detectChanges();
+                } else {
+                    this.IsResponsable_Achat = true;
+            }
+            }
             console.log(this.currentUser)
 
      })

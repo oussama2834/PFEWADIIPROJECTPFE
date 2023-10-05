@@ -58,17 +58,22 @@ public class UserDto{
 //	private User user;
 
 		  public static UserDto FromEntity(User entity) {
+			  if (entity != null) {
+				  UserDto userDto =new UserDto();
+				  BeanUtils.copyProperties(entity,userDto);
+				  List<net.gestionachat.entities.Role> rolesDto = entity.getRoles();
+				  userDto.setRoles(rolesDto);
+				  return userDto;
+			  }
 
-		  UserDto userDto =new UserDto();
-		  BeanUtils.copyProperties(entity,userDto);
-		  List<net.gestionachat.entities.Role> rolesDto = entity.getRoles();
-			  userDto.setRoles(rolesDto);
-		  return userDto;
+			  return null;
+
 
 		  }
 		  public static User toEntity(UserDto dto) {
 			  User user=new User();
-		  BeanUtils.copyProperties(dto,user); return user;
+		  BeanUtils.copyProperties(dto,user);
+		  return user;
 
 		  }
 

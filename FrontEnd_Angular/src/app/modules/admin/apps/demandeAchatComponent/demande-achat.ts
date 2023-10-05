@@ -14,7 +14,7 @@ export interface DemandeAchat {
     etat: string;
     motifRejet: string;
     userDemandeur: User;
-    userApprobateur:User;
+    userApprouvant:User;
     articles: Article[];
     avatar?: string;
     status?: string;

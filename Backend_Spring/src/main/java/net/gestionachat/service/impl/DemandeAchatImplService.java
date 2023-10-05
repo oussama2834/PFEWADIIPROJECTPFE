@@ -8,6 +8,7 @@ import net.gestionachat.Exception.ErrorCodes;
 import net.gestionachat.Exception.InvalidOperationException;
 import net.gestionachat.dto.DemandeAchatDto;
 
+import net.gestionachat.dto.UserDto;
 import net.gestionachat.entities.DemandeAchat;
 import net.gestionachat.repository.DemandeAchatRep;
 import net.gestionachat.service.interFace.DemandeAchatService;
@@ -36,6 +37,7 @@ public class DemandeAchatImplService implements DemandeAchatService {
         // get User
        // User demandeur = userRepository.findByEmail(authentication.getName()).get();
         objectValidator.validate(dto);
+        dto.setEtat("Treatement");
         DemandeAchat demandeAchat = DemandeAchatDto.toEntity(dto);
 
 
@@ -117,20 +119,20 @@ public class DemandeAchatImplService implements DemandeAchatService {
 
     @Override
     public void ValiderDemande(DemandeAchatDto dto) {
-        DemandeAchat demandeAchat = new DemandeAchat();
-        BeanUtils.copyProperties(demandeAchat, dto);
-
-            demandeAchat.setEtat("accepted");
+        DemandeAchat demandeAchat = DemandeAchatDto.toEntity(dto);
+        User userApprouvant = UserDto.toEntity(dto.getUserApprouvant());
+        demandeAchat.setUserApprouvant(userApprouvant);
+            demandeAchat.setEtat("Accepted");
             demandeAchatRep.save(demandeAchat);
 
     }
 
     @Override
     public void RefuserDemande(DemandeAchatDto dto) {
-        DemandeAchat demandeAchat = new DemandeAchat();
-        BeanUtils.copyProperties(demandeAchat, dto);
-
-        demandeAchat.setEtat("refused");
+        DemandeAchat demandeAchat = DemandeAchatDto.toEntity(dto);
+        User userApprouvant = UserDto.toEntity(dto.getUserApprouvant());
+        demandeAchat.setUserApprouvant(userApprouvant);
+        demandeAchat.setEtat("Refused");
         demandeAchatRep.save(demandeAchat);
     }
 

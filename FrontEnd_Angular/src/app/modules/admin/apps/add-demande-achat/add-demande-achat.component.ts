@@ -19,6 +19,8 @@ import { DemandeAchat } from '../demandeAchatComponent/demande-achat';
 import { InventoryService } from '../ecommerce/inventory/inventory.service';
 import { DemandeAchatService } from '../demandeAchatComponent/demande-achat.service';
 import { Article } from 'app/modules/Models/Article';
+import { Role, User } from 'app/core/user/user.types';
+import { AuthService } from 'app/core/auth/auth.service';
 
 @Component({
   selector: 'app-add-demande-achat',
@@ -33,12 +35,15 @@ export class AddDemandeAchatComponent {
     articles: Article[] = [];
     isAdding: Boolean;
     isEditing: Boolean;
+    roles: Role[];
     articlescontrols = new FormControl('');
+    user !: User;
     demande_achat: DemandeAchat;
     constructor(
         private _formBuilder: UntypedFormBuilder,
         private inventoryservice: InventoryService,
         private demandeAchatService: DemandeAchatService,
+        private authservice : AuthService,
         //Added
         @Inject(MAT_DIALOG_DATA) public data: any
 
@@ -48,6 +53,7 @@ export class AddDemandeAchatComponent {
         this.isEditing = data.isEditing;
         this.demande_achat = data.achat
     }
+
     //Added
     getAllArticles() {
         this.inventoryservice.ListOfArticles().subscribe((res) => {
@@ -59,6 +65,12 @@ export class AddDemandeAchatComponent {
     })
     }
     ngOnInit() {
+        let email = localStorage.getItem('email')
+        this.authservice.FindUserByEmail(email).subscribe((res) => {
+            this.user = res;
+            this.roles = this.user.roles;
+            console.log(this.user)
+        },  (error) => {console.log(error)})
         this.getAllArticles();
         this.getAllDemands();
         this.AddForm = this._formBuilder.group({
@@ -69,6 +81,7 @@ export class AddDemandeAchatComponent {
             description           : ['',Validators.required],
             delais            : ['',Validators.required],
             etat         : ['',Validators.required],
+            userDemandeur        : ['',Validators.required],
             motifRejet             : ['',Validators.required],
             articles           : [[],Validators.required],
 
@@ -102,11 +115,13 @@ export class AddDemandeAchatComponent {
     //Added
     onFormSubmit() {
         console.log(this.AddForm.value)
+        this.AddForm.patchValue({ userDemandeur: this.user })
+        console.log(this.AddForm.value)
         if (this.isAdding) {
             this.demandeAchatService.ajouterDemandeAchat(this.AddForm.value).subscribe((res) => {
                 console.log(res);
 
-               window.location.reload();
+              window.location.reload();
          },(error)=> {
             console.log(error)
          } )

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import net.gestionachat.entities.Articles;
 import net.gestionachat.entities.DemandeAchat;
 
+import net.gestionachat.user.User;
 import org.springframework.beans.BeanUtils;
 
 import java.sql.Date;
@@ -47,7 +48,10 @@ public static DemandeAchatDto FromEntity(DemandeAchat entity) {
             .map(ArticleDto::FromEntity)
             .collect(Collectors.toList());
       demandeAchatDto.setArticles(articleDtos);
-
+    UserDto userDemandeurDto = UserDto.FromEntity(entity.getUserDemandeur());
+//    UserDto userApprouvantDto = UserDto.FromEntity(entity.getUserApprouvant());
+    demandeAchatDto.setUserDemandeur(userDemandeurDto);
+//    demandeAchatDto.setUserApprouvant(userApprouvantDto);
     return demandeAchatDto;
 }
 //    public static DemandeAchat toEntity(DemandeAchatDto dto) {
@@ -63,6 +67,11 @@ public static DemandeAchatDto FromEntity(DemandeAchat entity) {
                     .map(ArticleDto::toEntity)
                     .collect(Collectors.toList());
             demandeAchat.setArticles(articles);
+            User userDemandeur = UserDto.toEntity(dto.getUserDemandeur());
+//            User userApprouvant = UserDto.toEntity(dto.getUserApprouvant());
+            demandeAchat.setUserDemandeur(userDemandeur);
+//            demandeAchat.setUserApprouvant(userApprouvant);
+
         return demandeAchat;
 
     }

@@ -27,7 +27,7 @@
                     [placeholder]="'Search products'">
             </mat-form-field>
             <!-- Add product button -->
-            <button
+            <button *ngIf="IsUser"
                 class="ml-4"
                 mat-flat-button
                 [color]="'primary'"
@@ -53,14 +53,14 @@
             <tr>
                 <th style="width:100px" >Date&nbsp;Demande</th>
                 <th style="width:50px">Description</th>
-                <th style="width:60px">Qte&nbsp;Demandee</th>
-                <th style="width:40px">Qte&nbsp;Approuvee</th>
+                <th style="width:30px">Qte&nbsp;Demandee</th>
+                <th style="width:30px">Qte&nbsp;Approuvee</th>
                 <th style="width:80px">Date&nbsp;Approbation</th>
                 <th style="width:80px">Delai</th>
-                <th style="width:80px">Etat</th>
+                <th style="width:100px">Etat</th>
                 <th style="width:80px">Motif&nbsp;Rejet</th>
-                <th style="width:100px">Articles</th>
-                <th >Action</th>
+                <th style="width:80px">Articles</th>
+                <th>{{ IsUser == true ? ' ' :'Action'}}</th>
 
             </tr>
         </ng-template>
@@ -72,7 +72,17 @@
                 <td>{{ achat.qteApprouvee }}</td>
                 <td>{{ achat.dateApprobation }}</td>
                 <td>{{ achat.delais }}</td>
-                <td>{{ achat.etat }}</td>
+                <td>
+                  <B *ngIf="achat.etat == 'Accepted'" class="text-success">
+                    {{ achat.etat }}
+                  </B>
+                   <B *ngIf="achat.etat == 'Treatement'" class="text-primary">
+                    {{ achat.etat }}
+                  </B>
+                   <B *ngIf="achat.etat == 'Refused'" class="text-danger">
+                    {{ achat.etat }}
+                  </B>
+                  </td>
                 <td>{{ achat.motifRejet }}</td>
                 <td >
                     <div *ngIf="achat.articles.length != 0">
@@ -86,8 +96,8 @@
                     </div>
 
                 </td>
-                <td>
-                    <button
+                <td  >
+                    <button *ngIf="!IsUser"
                     class="ml-4"
                     mat-mini-fab
                     [color]="'primary'"
@@ -96,8 +106,8 @@
                     <mat-icon>edit</mat-icon>
 
                 </button>
-                <button
-                    class="ml-4"
+                <button *ngIf="!IsUser"
+                    class="ml-2"
                     mat-mini-fab
                     [color]="'warn'"
                    (click)="deleteDemand(achat.id)">
@@ -105,6 +115,29 @@
 
 
                 </button>
+                <!-- <button
+                mat-mini-fab
+                color="success" class="ml-2" (click)="AcceptConfirmationDialog(achat)" >
+                <mat-icon>check</mat-icon>
+
+                 </button>
+                 <button m mat-mini-fab color="warn" class="ml-2" (click)="RefuseConfirmationDialog(achat)"
+                 aria-label="Example icon button with a heart icon">
+                    <mat-icon>close</mat-icon>
+                  </button> -->
+                  <button *ngIf="!IsUser"  mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                  <mat-menu #menu="matMenu">
+                    <button mat-menu-item color="primary" (click)="AcceptConfirmationDialog(achat)">
+                      <mat-icon  [color]="'primary'">check</mat-icon>
+                      <span>Accept</span>
+                    </button>
+                    <button mat-menu-item color="warn" (click)="RefuseConfirmationDialog(achat)">
+                      <mat-icon [color]="'warn'">close</mat-icon>
+                      <span>Refuse</span>
+                    </button>
+                  </mat-menu>
                 </td>
 
             </tr>
